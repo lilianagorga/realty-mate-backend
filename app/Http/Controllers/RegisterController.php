@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\RegisterRequest;
 use App\Models\User;
+use Illuminate\Support\Facades\Hash;
 use Symfony\Component\HttpFoundation\Response;
 
 class RegisterController extends Controller
@@ -14,8 +15,12 @@ class RegisterController extends Controller
 //        $user = User::create($request->validated());
         $user = User::create(array_merge(
             $request->validated(),
-            ['email_verified_at' => now()]
+            [
+                'password' => Hash::make($request->password),
+                'email_verified_at' => now(),
+            ]
         ));
+
         return response($user, Response::HTTP_CREATED);
     }
 }
