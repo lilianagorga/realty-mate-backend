@@ -10,11 +10,14 @@ class DatabaseSeeder extends Seeder
 {
     public function run(): void
     {
-        User::create([
-            'name' => 'Liliana',
-            'email' => 'liliana.g@email.com',
-            'password' => Hash::make('123456789'),
-            'email_verified_at' => now(),
-        ]);
+        $user = User::where('email', 'liliana.g@email.com')->first();
+        if (!$user) {
+            User::create([
+                'name' => 'Liliana',
+                'email' => 'liliana.g@email.com',
+                'password' => Hash::make('123456789'),
+                'email_verified_at' => now(),
+            ]);
+        }
     }
 }

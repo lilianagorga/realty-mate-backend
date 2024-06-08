@@ -12,7 +12,6 @@ use Laravel\Sanctum\HasApiTokens;
 
 /**
  * @method static whereEmail(mixed $email)
- * @method static where(array $array)
  * @method static create(string[] $array)
  */
 
