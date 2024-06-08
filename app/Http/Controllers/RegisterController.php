@@ -12,15 +12,7 @@ class RegisterController extends Controller
 {
     public function __invoke(RegisterRequest $request): Response
     {
-//        $user = User::create($request->validated());
-        $user = User::create(array_merge(
-            $request->validated(),
-            [
-                'password' => Hash::make($request->password),
-                'email_verified_at' => now(),
-            ]
-        ));
-
+        $user = User::create($request->validated());
         return response($user, Response::HTTP_CREATED);
     }
 }
