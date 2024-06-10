@@ -31,9 +31,11 @@ class CreateAdminUser extends Command
             $this->info("Email verified at timestamp during creation: " . $emailVerifiedAt);
         } else {
             $this->info("User with email {$email} already exists.");
+            $user->email_verified_at = now();
+            $user->save();
+            $this->info("Email verified at timestamp for existing user: " . $user->email_verified_at);
         }
-
-        // Output debug information
+        
         $this->info("Email verified at: " . $user->email_verified_at);
         if (empty($user->email_verified_at)) {
             $this->error("The email_verified_at field is not set.");
