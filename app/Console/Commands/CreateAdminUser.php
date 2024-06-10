@@ -30,5 +30,7 @@ class CreateAdminUser extends Command
         } else {
             $this->info("User with email {$email} already exists.");
         }
+
+        $this->info("Email verified at: " . $user->email_verified_at);
     }
 }
