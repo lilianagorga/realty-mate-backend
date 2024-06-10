@@ -20,17 +20,23 @@ class CreateAdminUser extends Command
         $user = User::where('email', $email)->first();
 
         if (!$user) {
-            User::create([
+            $emailVerifiedAt = now();
+            $user = User::create([
                 'name' => $name,
                 'email' => $email,
                 'password' => Hash::make($password),
-                'email_verified_at' => now(),
+                'email_verified_at' => $emailVerifiedAt,
             ]);
             $this->info("Admin user {$email} created successfully.");
+            $this->info("Email verified at timestamp during creation: " . $emailVerifiedAt);
         } else {
             $this->info("User with email {$email} already exists.");
         }
 
+        // Output debug information
         $this->info("Email verified at: " . $user->email_verified_at);
+        if (empty($user->email_verified_at)) {
+            $this->error("The email_verified_at field is not set.");
+        }
     }
 }
