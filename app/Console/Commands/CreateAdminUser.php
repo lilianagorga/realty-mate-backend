@@ -35,10 +35,15 @@ class CreateAdminUser extends Command
             $user->save();
             $this->info("Email verified at timestamp for existing user: " . $user->email_verified_at);
         }
-        
+
         $this->info("Email verified at: " . $user->email_verified_at);
         if (empty($user->email_verified_at)) {
             $this->error("The email_verified_at field is not set.");
+        }
+        if ($user->hasRole('admin')) {
+            $this->info("User has admin role");
+        } else {
+            $this->info("User does not have admin role");
         }
     }
 }
