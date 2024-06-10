@@ -53,9 +53,13 @@ class User extends Authenticatable implements FilamentUser
         ];
     }
 
+    protected function getDefaultGuardName(): string {
+        return 'api';
+    }
+
     public function canAccessPanel(Panel $panel): bool
     {
-        return $this->hasRole('admin') && $this->hasVerifiedEmail();
+        return $this->hasRole('admin', 'api') && $this->hasVerifiedEmail();
     }
 
     public function properties(): HasMany
