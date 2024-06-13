@@ -5,6 +5,7 @@ namespace App\Console\Commands;
 use Illuminate\Console\Command;
 use App\Models\User;
 use Illuminate\Support\Facades\Hash;
+use Spatie\Permission\Models\Permission;
 use Spatie\Permission\Models\Role;
 
 class CreateAdminUser extends Command
@@ -17,7 +18,16 @@ class CreateAdminUser extends Command
         $email = $this->argument('email');
         $name = $this->argument('name') ?? 'Admin';
         $password = $this->argument('password') ?? 'password';
-        $adminRole = Role::firstOrCreate(['name' => 'admin']);
+
+        $adminRoleApi = Role::findOrCreate('admin', 'api');
+        $adminRoleWeb = Role::findOrCreate('admin', 'web');
+
+        $dashboardPermissionApi = Permission::findOrCreate('dashboard', 'api');
+        $dashboardPermissionWeb = Permission::findOrCreate('dashboard', 'web');
+
+        $adminRoleApi->givePermissionTo($dashboardPermissionApi);
+        $adminRoleWeb->givePermissionTo($dashboardPermissionWeb);
+
         $user = User::where('email', $email)->first();
 
         if (!$user) {
@@ -28,7 +38,10 @@ class CreateAdminUser extends Command
                 'password' => Hash::make($password),
                 'email_verified_at' => $emailVerifiedAt,
             ]);
-            $user->assignRole($adminRole);
+            $user->assignRole($adminRoleApi);
+            $user->assignRole($adminRoleWeb);
+            $user->givePermissionTo($dashboardPermissionApi);
+            $user->givePermissionTo($dashboardPermissionWeb);
             $this->info("Admin user {$email} created successfully.");
             $this->info("Email verified at timestamp during creation: " . $emailVerifiedAt);
         } else {

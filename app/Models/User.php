@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Support\Facades\Log;
 use Laravel\Sanctum\HasApiTokens;
 use Spatie\Permission\Traits\HasRoles;
 
@@ -50,13 +51,24 @@ class User extends Authenticatable
         ];
     }
 
-    public function canAccessPanel(): bool
-    {
-        return $this->hasRole('admin') && $this->hasVerifiedEmail();
-    }
-
     public function properties(): HasMany
     {
         return $this->hasMany(Property::class);
+    }
+
+//    protected function getDefaultGuardName(): string {
+//        return 'api';
+//    }
+
+    public function isAdmin(): bool
+    {
+//        return $this->hasRole('Admin', 'api');
+        return $this->hasRole('admin', 'api') || $this->hasRole('admin', 'web');
+    }
+
+    public function canAccessPanel(): bool
+    {
+//        return $this->isAdmin() || $this->hasPermissionTo('dashboard', 'api');
+        return $this->isAdmin() || $this->hasPermissionTo('dashboard', 'api') || $this->hasPermissionTo('dashboard', 'web');
     }
 }
