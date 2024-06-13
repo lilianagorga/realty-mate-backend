@@ -20,6 +20,11 @@ return Application::configure(basePath: dirname(__DIR__))
             \Illuminate\Foundation\Http\Middleware\ConvertEmptyStringsToNull::class,
             \Illuminate\Http\Middleware\HandleCors::class,
         ]);
+        $middleware->validateCsrfTokens(except: [
+            'login',
+            'register',
+            'logout'
+        ]);
     })
     ->withExceptions(function (Exceptions $exceptions) {
         //
