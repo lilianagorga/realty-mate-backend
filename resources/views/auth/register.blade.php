@@ -20,6 +20,10 @@
                 <input type="password" name="password" id="password" class="mt-1 block w-full" required>
             </div>
             <div class="mb-4">
+                <label for="password_confirmation" class="block text-sm font-medium text-gray-700">Confirm Password</label>
+                <input type="password" name="password_confirmation" id="password_confirmation" class="mt-1 block w-full" required>
+            </div>
+            <div class="mb-4">
                 <button type="submit" class="bg-blue-500 text-white px-4 py-2 rounded">Register</button>
             </div>
         </form>
