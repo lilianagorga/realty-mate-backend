@@ -12,23 +12,23 @@ Route::get('/', function () {
 Route::middleware('auth')->group(function () {
     Route::get('/dashboard', [DashboardController::class, 'dashboard'])->name('dashboard');
     Route::get('/roles', [DashboardController::class, 'createRole'])->name('dashboard.create-role');
-    Route::post('/logout', function () {
-        Auth::logout();
-        return redirect('/login');
-    })->name('logout');
+//    Route::post('/logout', function () {
+//        Auth::logout();
+//        return redirect('/login');
+//    })->name('logout');
 });
 
 Route::get('/login', function () {
     return view('auth.login');
 })->name('login');
 
-Route::post('/login', [AuthController::class, 'login']);
+//Route::post('/login', [AuthController::class, 'login']);
 
 Route::get('/register', function () {
     return view('auth.register');
 })->name('register');
 
-Route::post('/register', [AuthController::class, 'register']);
+//Route::post('/register', [AuthController::class, 'register']);
 
 Route::get('/logout', function () {
     Auth::logout();
