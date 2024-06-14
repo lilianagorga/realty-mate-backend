@@ -56,19 +56,13 @@ class User extends Authenticatable
         return $this->hasMany(Property::class);
     }
 
-//    protected function getDefaultGuardName(): string {
-//        return 'api';
-//    }
-
     public function isAdmin(): bool
     {
-//        return $this->hasRole('Admin', 'api');
         return $this->hasRole('admin', 'api') || $this->hasRole('admin', 'web');
     }
 
     public function canAccessPanel(): bool
     {
-//        return $this->isAdmin() || $this->hasPermissionTo('dashboard', 'api');
         return $this->isAdmin() || $this->hasPermissionTo('dashboard', 'api') || $this->hasPermissionTo('dashboard', 'web');
     }
 }

@@ -6,6 +6,7 @@ use App\Models\User;
 use Exception;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 use Illuminate\View\View;
 use Spatie\Permission\Models\Permission;
 use Spatie\Permission\Models\Role;
@@ -43,6 +44,7 @@ class DashboardController extends Controller
     {
         if ($request->wantsJson()) {
             if (!$request->user()->canAccessPanel()) {
+                Log::info("Access denied for user: {$request->user()->id}");
                 return response()->json(['message' => 'Access Forbidden'], Response::HTTP_FORBIDDEN);
             }
 
@@ -64,6 +66,7 @@ class DashboardController extends Controller
 
             return response()->json($data, Response::HTTP_OK);
         } else {
+            Log::info("Dashboard accessed by user: {$request->user()->id}");
             return view('dashboard.index');
         }
     }
