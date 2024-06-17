@@ -61,7 +61,7 @@ class User extends Authenticatable
         return $this->hasRole('admin', 'api') || $this->hasRole('admin', 'web');
     }
 
-    public function canAccessPanel(): bool
+    public function canAccessDashboard(): bool
     {
         return $this->isAdmin() || $this->hasPermissionTo('dashboard', 'api') || $this->hasPermissionTo('dashboard', 'web');
     }

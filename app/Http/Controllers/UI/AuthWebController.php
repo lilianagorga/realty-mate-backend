@@ -4,16 +4,16 @@ namespace App\Http\Controllers\UI;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\LoginRequest;
-use App\Http\Requests\RegisterRequest;
+use App\Http\Requests\UI\RegisterWebRequest;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 
-class AuthController extends Controller
+class AuthWebController extends Controller
 {
-    public function register(RegisterRequest $request): RedirectResponse
+    public function register(RegisterWebRequest $request): RedirectResponse
     {
         $data = $request->validated();
         $user = User::create([
@@ -22,6 +22,7 @@ class AuthController extends Controller
             'password' => Hash::make($data['password']),
         ]);
         $user->markEmailAsVerified();
+        $user->givePermissionTo('dashboard');
         Auth::login($user);
 
         return redirect()->route('login')->with('success', 'Registration successful. Please log in.');
@@ -33,13 +34,20 @@ class AuthController extends Controller
 
         if (Auth::attempt($credentials)) {
             $request->session()->regenerate();
+
+            $user = Auth::user();
+
+            if (!$user->canAccessDashboard()) {
+                Auth::logout();
+                return redirect()->route('login')->withErrors(['message' => 'You do not have access to the dashboard.']);
+            }
+
             return redirect()->intended('dashboard');
         }
 
-        return back()->withErrors([
-            'email' => 'The provided credentials do not match our records.',
-        ]);
+        return redirect()->route('login')->withErrors(['message' => 'The provided credentials do not match our records.']);
     }
+
 
     public function logout(Request $request): RedirectResponse
     {

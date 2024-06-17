@@ -1,17 +1,22 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\UI;
 
+use App\Http\Controllers\Controller;
 use App\Models\User;
 use App\Services\DashboardService;
 use Exception;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
+use Illuminate\View\View;
 use Spatie\Permission\Models\Permission;
 use Spatie\Permission\Models\Role;
 use Symfony\Component\HttpFoundation\Response;
 use Illuminate\Support\Facades\Cache;
 
-class DashboardController extends Controller
+class DashboardWebController extends Controller
 {
     protected DashboardService $dashboardService;
 
@@ -20,17 +25,15 @@ class DashboardController extends Controller
         $this->dashboardService = $dashboardService;
     }
 
-    public function dashboard(Request $request): Response
+    public function dashboard(Request $request): Response|View
     {
         if (!$request->user()->canAccessDashboard()) {
-            return response()->json(['message' => 'Access Forbidden'], Response::HTTP_FORBIDDEN);
+            return response()->json(['message' => 'You do not have access to the dashboard.'], Response::HTTP_FORBIDDEN);
         }
 
         $data = $this->dashboardService->getDashboardData();
-
-        return response()->json($data, Response::HTTP_OK);
+        return view('dashboard.index', $data);
     }
-
 
     public function createRole(Request $request): Response
     {
@@ -43,7 +46,7 @@ class DashboardController extends Controller
 
             $role = Role::create([
                 'name' => $validatedData['name'],
-                'guard_name' => 'api'
+                'guard_name' => 'web'
             ]);
 
             Cache::forget('dashboard');
@@ -164,7 +167,7 @@ class DashboardController extends Controller
 
             $permission = Permission::create([
                 'name' => $validatedData['name'],
-                'guard_name' => 'api'
+                'guard_name' => 'web'
             ]);
 
             Cache::forget('dashboard');
@@ -236,7 +239,7 @@ class DashboardController extends Controller
         $user = User::find($validatedData['user_id']);
 
         if ($user && $user->hasPermissionTo($validatedData['name'])) {
-            $permission = Permission::findByName($validatedData['name'], 'api');
+            $permission = Permission::findByName($validatedData['name'], 'web');
             $user->revokePermissionTo($permission);
             Cache::forget('dashboard');
             return response()->json(['message' => 'Permission revoked successfully', 'user' => $user, 'permission' => $permission], Response::HTTP_OK);
