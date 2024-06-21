@@ -19,14 +19,11 @@ class CreateAdminUser extends Command
         $name = $this->argument('name') ?? 'Admin';
         $password = $this->argument('password') ?? 'password';
 
-        $adminRoleApi = Role::findOrCreate('admin', 'api');
-        $adminRoleWeb = Role::findOrCreate('admin', 'web');
+        $adminRole = Role::findOrCreate('admin', 'web');
 
-        $dashboardPermissionApi = Permission::findOrCreate('dashboard', 'api');
-        $dashboardPermissionWeb = Permission::findOrCreate('dashboard', 'web');
+        $dashboardPermission = Permission::findOrCreate('dashboard', 'web');
 
-        $adminRoleApi->givePermissionTo($dashboardPermissionApi);
-        $adminRoleWeb->givePermissionTo($dashboardPermissionWeb);
+        $adminRole->givePermissionTo($dashboardPermission);
 
         $user = User::where('email', $email)->first();
 
@@ -38,10 +35,9 @@ class CreateAdminUser extends Command
                 'password' => Hash::make($password),
                 'email_verified_at' => $emailVerifiedAt,
             ]);
-            $user->assignRole($adminRoleApi);
-            $user->assignRole($adminRoleWeb);
-            $user->givePermissionTo($dashboardPermissionApi);
-            $user->givePermissionTo($dashboardPermissionWeb);
+
+            $user->assignRole($adminRole);
+            $user->givePermissionTo($dashboardPermission);
             $this->info("Admin user {$email} created successfully.");
             $this->info("Email verified at timestamp during creation: " . $emailVerifiedAt);
         } else {
