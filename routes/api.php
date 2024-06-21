@@ -1,7 +1,6 @@
 <?php
 
 use App\Http\Controllers\AuthController;
-use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\UserController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -13,17 +12,6 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/user', function (Request $request) {
         return $request->user();
     });
-
-    Route::get('/dashboard', [DashboardController::class, 'dashboard']);
-    Route::post('/roles', [DashboardController::class, 'createRole']);
-    Route::put('/roles', [DashboardController::class, 'updateRole']);
-    Route::delete('/roles/delete', [DashboardController::class, 'deleteRole']);
-    Route::post('/roles/assign', [DashboardController::class, 'addRole']);
-    Route::post('/roles/revoke', [DashboardController::class, 'revokeRole']);
-    Route::post('/permissions', [DashboardController::class, 'createPermission']);
-    Route::delete('/permissions/delete', [DashboardController::class, 'deletePermission']);
-    Route::post('/permissions/assign', [DashboardController::class, 'addPermission']);
-    Route::post('/permissions/revoke', [DashboardController::class, 'revokePermission']);
 
     Route::get('/properties', [PropertyController::class, 'index']);
     Route::post('/properties', [PropertyController::class, 'store']);
