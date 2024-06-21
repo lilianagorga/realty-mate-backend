@@ -5,38 +5,45 @@ namespace App\Http\Controllers\UI;
 use App\Http\Controllers\Controller;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\DB;
 use Illuminate\View\View;
-use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Spatie\Permission\Models\Role;
 use Spatie\Permission\Models\Permission;
 
 class DashboardController extends Controller
 {
-    public function dashboard(Request $request): Response | View
+    public function dashboard(Request $request): RedirectResponse | View
     {
         if (!$request->user()->canAccessDashboard()) {
-            return response()->json(['message' => 'You do not have access to the dashboard.'], Response::HTTP_FORBIDDEN);
+            return redirect()->route('dashboard')->with('error', 'You do not have access to the dashboard.');
         }
 
-        $users = User::with(['roles.permissions', 'permissions'])->get();
-        $roles = Role::all()->pluck('name');
-        $rolesWithAssociatedPermissions = Role::with('permissions')->get();
-        $permissions = Permission::all()->pluck('name');
+        $data = Cache::remember('dashboard', 60, function () {
+            $users = User::with(['roles.permissions', 'permissions'])->get();
+            $roles = Role::all()->pluck('name');
+            $rolesWithAssociatedPermissions = Role::with('permissions')->get();
+            $permissions = Permission::all()->pluck('name');
 
-        return view('dashboard.index', compact('users', 'roles', 'rolesWithAssociatedPermissions', 'permissions'));
+            return compact('users', 'roles', 'rolesWithAssociatedPermissions', 'permissions');
+        });
+
+        return view('dashboard.index', $data);
     }
 
-    public function createRole(Request $request): Response
+    public function createRole(Request $request): RedirectResponse
     {
         if ($request->user()->isAdmin()) {
             $validatedData = $request->validate(['name' => 'required|string']);
             $role = Role::create(['name' => $validatedData['name'], 'guard_name' => 'web']);
-            return response()->json($role, Response::HTTP_CREATED);
+            Cache::forget('dashboard');
+            return redirect()->route('dashboard')->with('success', 'Role created successfully.');
         }
-        return response()->json(['message' => 'Access Forbidden'], Response::HTTP_FORBIDDEN);
+        return redirect()->route('dashboard')->with('error', 'Access Forbidden');
     }
 
-    public function updateRole(Request $request): Response
+    public function updateRole(Request $request): RedirectResponse
     {
         if ($request->user()->isAdmin()) {
             $validatedData = $request->validate([
@@ -47,32 +54,43 @@ class DashboardController extends Controller
             $role = Role::firstWhere('name', $validatedData['name']);
             if ($role && $validatedData['permissions']) {
                 $permissions = Permission::whereIn('name', $validatedData['permissions'])->where('guard_name', 'web')->get();
-                $role->syncPermissions($permissions);
-                return response()->json([
-                    'message' => 'Role permissions updated successfully',
-                    'role' => $role
-                ]);
+                foreach ($permissions as $permission) {
+                    if (!$role->hasPermissionTo($permission)) {
+                        $role->givePermissionTo($permission);
+                    }
+                }
+
+                Cache::forget('dashboard');
+                return redirect()->route('dashboard')->with('success', 'Role permissions updated successfully.');
             }
-            return response()->json(['message' => 'Role not found or no permissions provided'], Response::HTTP_NOT_FOUND);
+            return redirect()->route('dashboard')->with('error', 'Role not found or no permissions provided');
         }
-        return response()->json(['message' => 'Access Forbidden'], Response::HTTP_FORBIDDEN);
+        return redirect()->route('dashboard')->with('error', 'Access Forbidden');
     }
 
-    public function deleteRole(Request $request): Response
+    public function deleteRole(Request $request): RedirectResponse
     {
         if ($request->user()->isAdmin()) {
             $validatedData = $request->validate(['name' => 'required|string|exists:roles,name']);
             $role = Role::where('name', $validatedData['name'])->first();
             if ($role) {
-                $role->delete();
-                return response()->json(['message' => 'Role deleted successfully'], Response::HTTP_NO_CONTENT);
+                $roleId = $role->id;
+                DB::statement('SET FOREIGN_KEY_CHECKS=0;');
+                DB::transaction(function () use ($roleId) {
+                    DB::table('role_has_permissions')->where('role_id', $roleId)->delete();
+                    DB::table('model_has_roles')->where('role_id', $roleId)->delete();
+                    DB::table('roles')->where('id', $roleId)->delete();
+                });
+                DB::statement('SET FOREIGN_KEY_CHECKS=1;');
+                Cache::forget('dashboard');
+                return redirect()->route('dashboard')->with('success', 'Role deleted successfully.');
             }
-            return response()->json(['message' => 'Role not found'], Response::HTTP_NOT_FOUND);
+            return redirect()->route('dashboard')->with('error', 'Role not found');
         }
-        return response()->json(['message' => 'Access Forbidden'], Response::HTTP_FORBIDDEN);
+        return redirect()->route('dashboard')->with('error', 'Access Forbidden');
     }
 
-    public function addRole(Request $request): Response
+    public function addRole(Request $request): RedirectResponse
     {
         if ($request->user()->isAdmin()) {
             $validatedData = $request->validate([
@@ -83,14 +101,15 @@ class DashboardController extends Controller
             $role = Role::where('name', $validatedData['name'])->first();
             if ($user && $role) {
                 $user->assignRole($role);
-                return response()->json(['message' => 'Role assigned to user successfully'], Response::HTTP_OK);
+                Cache::forget('dashboard');
+                return redirect()->route('dashboard')->with('success', 'Role assigned to user successfully.');
             }
-            return response()->json(['message' => 'User or Role not found'], Response::HTTP_NOT_FOUND);
+            return redirect()->route('dashboard')->with('error', 'User or Role not found');
         }
-        return response()->json(['message' => 'Access Forbidden'], Response::HTTP_FORBIDDEN);
+        return redirect()->route('dashboard')->with('error', 'Access Forbidden');
     }
 
-    public function revokeRole(Request $request): Response
+    public function revokeRole(Request $request): RedirectResponse
     {
         if ($request->user()->isAdmin()) {
             $validatedData = $request->validate([
@@ -101,38 +120,48 @@ class DashboardController extends Controller
             $role = Role::where('name', $validatedData['name'])->first();
             if ($user && $role) {
                 $user->removeRole($role);
-                return response()->json(['message' => 'Role revoked from user successfully'], Response::HTTP_OK);
+                Cache::forget('dashboard');
+                return redirect()->route('dashboard')->with('success', 'Role revoked from user successfully.');
             }
-            return response()->json(['message' => 'User or Role not found'], Response::HTTP_NOT_FOUND);
+            return redirect()->route('dashboard')->with('error', 'User or Role not found');
         }
-        return response()->json(['message' => 'Access Forbidden'], Response::HTTP_FORBIDDEN);
+        return redirect()->route('dashboard')->with('error', 'Access Forbidden');
     }
 
-    public function createPermission(Request $request): Response
+    public function createPermission(Request $request): RedirectResponse
     {
         if ($request->user()->isAdmin()) {
             $validatedData = $request->validate(['name' => 'required|string']);
             $permission = Permission::create(['name' => $validatedData['name'], 'guard_name' => 'web']);
-            return response()->json($permission, Response::HTTP_CREATED);
+            Cache::forget('dashboard');
+            return redirect()->route('dashboard')->with('success', 'Permission created successfully.');
         }
-        return response()->json(['message' => 'Access Forbidden'], Response::HTTP_FORBIDDEN);
+        return redirect()->route('dashboard')->with('error', 'Access Forbidden');
     }
 
-    public function deletePermission(Request $request): Response
+    public function deletePermission(Request $request): RedirectResponse
     {
         if ($request->user()->isAdmin()) {
             $validatedData = $request->validate(['name' => 'required|string|exists:permissions,name']);
             $permission = Permission::where('name', $validatedData['name'])->first();
             if ($permission) {
-                $permission->delete();
-                return response()->json(['message' => 'Permission deleted successfully'], Response::HTTP_NO_CONTENT);
+                $permissionId = $permission->id;
+                DB::statement('SET FOREIGN_KEY_CHECKS=0;');
+                DB::transaction(function () use ($permissionId) {
+                    DB::table('role_has_permissions')->where('permission_id', $permissionId)->delete();
+                    DB::table('model_has_permissions')->where('permission_id', $permissionId)->delete();
+                    DB::table('permissions')->where('id', $permissionId)->delete();
+                });
+                DB::statement('SET FOREIGN_KEY_CHECKS=1;');
+                Cache::forget('dashboard');
+                return redirect()->route('dashboard')->with('success', 'Permission deleted successfully.');
             }
-            return response()->json(['message' => 'Permission not found'], Response::HTTP_NOT_FOUND);
+            return redirect()->route('dashboard')->with('error', 'Permission not found');
         }
-        return response()->json(['message' => 'Access Forbidden'], Response::HTTP_FORBIDDEN);
+        return redirect()->route('dashboard')->with('error', 'Access Forbidden');
     }
 
-    public function addPermission(Request $request): Response
+    public function addPermission(Request $request): RedirectResponse
     {
         if ($request->user()->isAdmin()) {
             $validatedData = $request->validate([
@@ -143,14 +172,15 @@ class DashboardController extends Controller
             $permission = Permission::where('name', $validatedData['name'])->first();
             if ($user && $permission) {
                 $user->givePermissionTo($permission);
-                return response()->json(['message' => 'Permission assigned to user successfully'], Response::HTTP_OK);
+                Cache::forget('dashboard');
+                return redirect()->route('dashboard')->with('success', 'Permission assigned to user successfully.');
             }
-            return response()->json(['message' => 'User or Permission not found'], Response::HTTP_NOT_FOUND);
+            return redirect()->route('dashboard')->with('error', 'User or Permission not found');
         }
-        return response()->json(['message' => 'Access Forbidden'], Response::HTTP_FORBIDDEN);
+        return redirect()->route('dashboard')->with('error', 'Access Forbidden');
     }
 
-    public function revokePermission(Request $request): Response
+    public function revokePermission(Request $request): RedirectResponse
     {
         if ($request->user()->isAdmin()) {
             $validatedData = $request->validate([
@@ -161,10 +191,11 @@ class DashboardController extends Controller
             if ($user && $user->hasPermissionTo($validatedData['name'])) {
                 $permission = Permission::findByName($validatedData['name']);
                 $user->revokePermissionTo($permission);
-                return response()->json(['message' => 'Permission revoked from user successfully'], Response::HTTP_OK);
+                Cache::forget('dashboard');
+                return redirect()->route('dashboard')->with('success', 'Permission revoked from user successfully.');
             }
-            return response()->json(['message' => 'User or Permission not found'], Response::HTTP_NOT_FOUND);
+            return redirect()->route('dashboard')->with('error', 'User or Permission not found');
         }
-        return response()->json(['message' => 'Access Forbidden'], Response::HTTP_FORBIDDEN);
+        return redirect()->route('dashboard')->with('error', 'Access Forbidden');
     }
 }
