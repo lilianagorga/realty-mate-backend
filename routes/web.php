@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\PropertyController;
 use App\Http\Controllers\UI\AuthWebController;
 use App\Http\Controllers\UI\DashboardController;
 use Illuminate\Support\Facades\Auth;
@@ -24,7 +25,15 @@ Route::middleware(['auth'])->group(function () {
     Route::delete('/permissions/delete', [DashboardController::class, 'deletePermission'])->name('dashboard.delete-permission');
     Route::post('/permissions/assign', [DashboardController::class, 'addPermission'])->name('dashboard.add-permission');
     Route::post('/permissions/revoke', [DashboardController::class, 'revokePermission'])->name('dashboard.revoke-permission');
+
     Route::post('/logout', [AuthWebController::class, 'logout'])->name('logout');
+
+    Route::get('/dashboard/properties', [PropertyController::class, 'index'])->name('dashboard.properties.index');
+    Route::post('/dashboard/properties', [PropertyController::class, 'store'])->name('dashboard.properties.store');
+    Route::get('/dashboard/properties/{id}', [PropertyController::class, 'show'])->name('dashboard.properties.show');
+    Route::get('/dashboard/properties/{id}/edit', [PropertyController::class, 'edit'])->name('dashboard.properties.edit');
+    Route::put('/dashboard/properties/{id}', [PropertyController::class, 'update'])->name('dashboard.properties.update');
+    Route::delete('/dashboard/properties/{id}', [PropertyController::class, 'destroy'])->name('dashboard.properties.destroy');
 });
 
 Route::get('/', function () {
