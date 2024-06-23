@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\PropertyController;
+use App\Http\Controllers\TeamController;
 use App\Http\Controllers\UI\AuthWebController;
 use App\Http\Controllers\UI\DashboardController;
 use Illuminate\Support\Facades\Auth;
@@ -34,6 +35,14 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/dashboard/properties/{id}/edit', [PropertyController::class, 'edit'])->name('dashboard.properties.edit');
     Route::put('/dashboard/properties/{id}', [PropertyController::class, 'update'])->name('dashboard.properties.update');
     Route::delete('/dashboard/properties/{id}', [PropertyController::class, 'destroy'])->name('dashboard.properties.destroy');
+
+    Route::get('/dashboard/teams', [TeamController::class, 'index'])->name('dashboard.teams.index');
+    Route::post('/dashboard/teams', [TeamController::class, 'store'])->name('dashboard.teams.store');
+    Route::get('/dashboard/teams/create', [TeamController::class, 'create'])->name('dashboard.teams.create');
+    Route::get('/dashboard/teams/{id}', [TeamController::class, 'show'])->name('dashboard.teams.show');
+    Route::get('/dashboard/teams/{id}/edit', [TeamController::class, 'edit'])->name('dashboard.teams.edit');
+    Route::put('/dashboard/teams/{id}', [TeamController::class, 'update'])->name('dashboard.teams.update');
+    Route::delete('/dashboard/teams/{id}', [TeamController::class, 'destroy'])->name('dashboard.teams.destroy');
 });
 
 Route::get('/', function () {
