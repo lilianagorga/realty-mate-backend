@@ -41,7 +41,7 @@ return [
         'list' => 51,
         'cover' => '/images/customer/team-4.jpg',
         'address' => '2272 Briarwood Drive',
-        'name' => 'Michael P. Grimaldo',
+        'name' => 'Paris M. Rossi',
         'icon' => json_encode([
             '<i class="fa-brands fa-facebook-f"></i>',
             '<i class="fa-brands fa-linkedin"></i>',
