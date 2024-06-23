@@ -9,5 +9,9 @@
             <p class="text-lg text-center text-beige-600">{{ $property->description }}</p>
             <p class="text-lg text-center text-beige-600">Price: €{{ $property->price }}</p>
         </div>
+
+        <div class="mt-10 text-center">
+            <a href="{{ route('dashboard.properties.index') }}" class="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600">Back</a>
+        </div>
     </div>
 @endsection

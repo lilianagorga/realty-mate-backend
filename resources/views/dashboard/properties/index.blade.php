@@ -2,6 +2,14 @@
 
 @section('dashboard-content')
     <div class="container mx-auto p-4">
+        <div x-data="{ message: '{{ session('success') ?? session('error') }}', type: '{{ session('success') ? 'success' : 'error' }}' }" x-show="message" x-init="setTimeout(() => message = '', 5000)" class="mb-4">
+            <div x-show="type === 'success'" class="bg-green-500 text-white p-4 rounded">
+                <p x-text="message"></p>
+            </div>
+            <div x-show="type === 'error'" class="bg-red-500 text-white p-4 rounded">
+                <p x-text="message"></p>
+            </div>
+        </div>
         <h1 class="text-4xl font-bold text-green-600 text-center">Properties</h1>
 
         <div class="mt-20">
