@@ -1,5 +1,6 @@
 <?php
 
+use App\Console\Commands\CreateTeamData;
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
@@ -31,4 +32,5 @@ return Application::configure(basePath: dirname(__DIR__))
         //
     })->withCommands([
         CreateAdminUser::class,
+        CreateTeamData::class,
     ])->create();
