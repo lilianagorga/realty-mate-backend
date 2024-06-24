@@ -23,37 +23,40 @@ class CreateAdminUser extends Command
 
         $dashboardPermission = Permission::findOrCreate('dashboard', 'web');
         $managePropertiesPermission = Permission::findOrCreate('manageProperties', 'web');
+        $teamManagementPermission = Permission::findOrCreate('teamManagement', 'web');
 
         $adminRole->givePermissionTo($dashboardPermission);
         $adminRole->givePermissionTo($managePropertiesPermission);
+        $adminRole->givePermissionTo($teamManagementPermission);
 
-        $user = User::where('email', $email)->first();
+        $adminUser = User::where('email', $email)->first();
 
-        if (!$user) {
+        if (!$adminUser) {
             $emailVerifiedAt = now();
-            $user = User::create([
+            $adminUser = User::create([
                 'name' => $name,
                 'email' => $email,
                 'password' => Hash::make($password),
                 'email_verified_at' => $emailVerifiedAt,
             ]);
 
-            $user->assignRole($adminRole);
-            $user->givePermissionTo($dashboardPermission);
-            $user->givePermissionTo($managePropertiesPermission);
+            $adminUser->assignRole($adminRole);
+            $adminUser->givePermissionTo($dashboardPermission);
+            $adminUser->givePermissionTo($managePropertiesPermission);
+            $adminUser->givePermissionTo($teamManagementPermission);
             $this->info("Admin user {$email} created successfully.");
         } else {
             $this->info("User with email {$email} already exists.");
-            $user->email_verified_at = now();
-            $user->save();
-            $this->info("Email verified at timestamp for existing user: " . $user->email_verified_at);
+            $adminUser->email_verified_at = now();
+            $adminUser->save();
+            $this->info("Email verified at timestamp for existing user: " . $adminUser->email_verified_at);
         }
 
-        $this->info("Email verified at: " . $user->email_verified_at);
-        if (empty($user->email_verified_at)) {
+        $this->info("Email verified at: " . $adminUser->email_verified_at);
+        if (empty($adminUser->email_verified_at)) {
             $this->error("The email_verified_at field is not set.");
         }
-        if ($user->hasRole('admin')) {
+        if ($adminUser->hasRole('admin')) {
             $this->info("User has admin role");
         } else {
             $this->info("User does not have admin role");

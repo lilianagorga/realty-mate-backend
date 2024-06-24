@@ -4,6 +4,7 @@ namespace Database\Seeders;
 
 use App\Models\Team;
 use App\Models\User;
+use App\Traits\CreateTeamUsers;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Hash;
 use Spatie\Permission\Models\Permission;
@@ -11,6 +12,7 @@ use Spatie\Permission\Models\Role;
 
 class DatabaseSeeder extends Seeder
 {
+    use CreateTeamUsers;
     public function run(): void
     {
         $adminRole = Role::findOrCreate('admin', 'web');
@@ -18,9 +20,11 @@ class DatabaseSeeder extends Seeder
 
         $dashboardPermission = Permission::findOrCreate('dashboard', 'web');
         $managePropertiesPermission = Permission::findOrCreate('manageProperties', 'web');
+        $teamManagementPermission = Permission::findOrCreate('teamManagement', 'web');
 
         $adminRole->givePermissionTo($dashboardPermission);
         $adminRole->givePermissionTo($managePropertiesPermission);
+        $adminRole->givePermissionTo($teamManagementPermission);
 
         $teamRole->givePermissionTo($dashboardPermission);
         $teamRole->givePermissionTo($managePropertiesPermission);
@@ -36,26 +40,10 @@ class DatabaseSeeder extends Seeder
             $adminUser->assignRole($adminRole);
             $adminUser->givePermissionTo($dashboardPermission);
             $adminUser->givePermissionTo($managePropertiesPermission);
+            $adminUser->givePermissionTo($teamManagementPermission);
         }
 
-        $teams = config('team_data');
-        foreach ($teams as $team) {
-            Team::create($team);
-            $cleanedName = preg_replace('/\.+/', '.', str_replace(' ', '.', strtolower($team['name'])));
-            $email = $cleanedName . '@email.com';
-
-            $teamUser = User::firstOrCreate(
-                ['email' => $email],
-                [
-                    'name' => $team['name'],
-                    'password' => Hash::make('Password123!'),
-                    'email_verified_at' => now(),
-                ]
-            );
-            $teamUser->assignRole($teamRole);
-            $teamUser->givePermissionTo($dashboardPermission);
-            $teamUser->givePermissionTo($managePropertiesPermission);
-        }
+        $this->createTeamUsers();
 
     }
 }
