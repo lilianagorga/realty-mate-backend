@@ -56,15 +56,32 @@ class User extends Authenticatable
         return $this->hasMany(Property::class);
     }
 
-    protected string $guard_name = 'web';
+    protected function getDefaultGuardName(): string {
+        return 'web';
+    }
 
     public function isAdmin(): bool
     {
-        return $this->hasRole('admin');
+        return $this->hasRole('admin', 'web');
+    }
+
+    public function isTeam(): bool
+    {
+        return $this->hasRole('team', 'web' );
     }
 
     public function canAccessDashboard(): bool
     {
-        return $this->isAdmin() || $this->hasPermissionTo('dashboard');
+        return $this->isAdmin() || $this->hasPermissionTo('dashboard', 'web');
+    }
+
+    public function canManageProperties(): bool
+    {
+        return $this->isAdmin() || $this->isTeam() || $this->hasPermissionTo('manageProperties', 'web');
+    }
+
+    public function canManageTeam(): bool
+    {
+        return $this->isAdmin() || $this->hasPermissionTo('teamManagement', 'web');
     }
 }

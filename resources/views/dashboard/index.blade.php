@@ -10,6 +10,7 @@
                 <p x-text="message"></p>
             </div>
         </div>
+
         <h1 class="text-4xl font-bold text-green-600 text-center">Welcome to the dashboard</h1>
 
         <div class="mt-20">

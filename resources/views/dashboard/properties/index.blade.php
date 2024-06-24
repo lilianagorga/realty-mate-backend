@@ -12,21 +12,27 @@
         </div>
         <h1 class="text-4xl font-bold text-green-600 text-center">Properties</h1>
 
-        <div class="mt-20">
-            <h2 class="text-2xl font-semibold mb-4 text-center text-beige-600">Create Property</h2>
-            <form action="{{ route('dashboard.properties.store') }}" method="POST" class="flex flex-col items-center">
-                @csrf
-                <label for="title" class="mt-6 block text-sm font-medium text-beige-600">Title</label>
-                <input type="text" name="title" id="title" class="mt-1 block w-1/3 border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-green-600 bg-beige-200 text-green-700 text-center" required>
+        @if (Auth::user()->can('manageProperties'))
+            <div class="mt-20">
+                <h2 class="text-2xl font-semibold mb-4 text-center text-beige-600">Create Property</h2>
+                <form action="{{ route('dashboard.properties.store') }}" method="POST" class="flex flex-col items-center">
+                    @csrf
+                    <label for="title" class="mt-6 block text-sm font-medium text-beige-600">Title</label>
+                    <input type="text" name="title" id="title" class="mt-1 block w-1/3 border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-green-600 bg-beige-200 text-green-700 text-center" required>
 
-                <label for="description" class="mt-6 block text-sm font-medium text-beige-600">Description</label>
-                <textarea name="description" id="description" class="description-properties mt-1 block w-1/3 border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-green-600 bg-beige-200 text-green-700 text-center" required></textarea>
+                    <label for="description" class="mt-6 block text-sm font-medium text-beige-600">Description</label>
+                    <textarea name="description" id="description" class="description-properties mt-1 block w-1/3 border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-green-600 bg-beige-200 text-green-700 text-center" required></textarea>
 
-                <label for="price" class="mt-6 block text-sm font-medium text-beige-600">Price</label>
-                <input type="text" name="price" id="price" class="mt-1 block w-1/3 border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-green-600 bg-beige-200 text-green-700 text-center" required pattern="^\d{1,3}(\.\d{3})*$" placeholder="1.000">
-                <button type="submit" class="mt-6 bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600 mb-4">Create Property</button>
-            </form>
-        </div>
+                    <label for="price" class="mt-6 block text-sm font-medium text-beige-600">Price</label>
+                    <input type="text" name="price" id="price" class="mt-1 block w-1/3 border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-green-600 bg-beige-200 text-green-700 text-center" required pattern="^\d{1,3}(\.\d{3})*$" placeholder="1.000">
+                    <button type="submit" class="mt-6 bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600 mb-4">Create Property</button>
+                </form>
+            </div>
+        @else
+            <div class="mt-20">
+                <h2 class="text-2xl font-semibold mb-4 text-center text-beige-600">You do not have permission to create properties</h2>
+            </div>
+        @endif
 
         <div class="mt-20">
             <h2 class="text-2xl font-semibold mb-4 text-center text-beige-600">Existing Properties</h2>
@@ -47,14 +53,16 @@
                         <td class="py-2 text-beige-600">€{{ $property->price }}</td>
                         <td class="py-2">
                             <a href="{{ route('dashboard.properties.show', $property->id) }}" class="text-green-600">View</a>
-                            <span class="text-beige-600 mx-2">|</span>
-                            <a href="{{ route('dashboard.properties.edit', $property->id) }}" class="text-green-600">Edit</a>
-                            <span class="text-beige-600 mx-2">|</span>
-                            <form action="{{ route('dashboard.properties.destroy', $property->id) }}" method="POST" class="inline">
-                                @csrf
-                                @method('DELETE')
-                                <button type="submit" class="text-red-600">Delete</button>
-                            </form>
+                            @if (Auth::user()->can('manageProperties'))
+                                <span class="text-beige-600 mx-2">|</span>
+                                <a href="{{ route('dashboard.properties.edit', $property->id) }}" class="text-green-600">Edit</a>
+                                <span class="text-beige-600 mx-2">|</span>
+                                <form action="{{ route('dashboard.properties.destroy', $property->id) }}" method="POST" class="inline">
+                                    @csrf
+                                    @method('DELETE')
+                                    <button type="submit" class="text-red-600">Delete</button>
+                                </form>
+                            @endif
                         </td>
                     </tr>
                 @endforeach

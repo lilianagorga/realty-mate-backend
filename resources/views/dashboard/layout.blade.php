@@ -4,10 +4,13 @@
     <nav class="bg-beige-200 shadow-lg rounded-lg mb-8 py-4">
         <div class="container mx-auto px-8">
             <div class="flex justify-between items-center">
-                <a href="{{ route('dashboard') }}" class="text-xl font-bold text-green-600">Dashboard</a>
+                <a href="{{ route('dashboard') }}" class="text-xl font-bold text-green-600 hover:text-green-700">Dashboard</a>
                 <div class="flex items-center space-x-8">
-                    <a href="{{ route('dashboard') }}" class="text-green-600 hover:text-green-700">Home</a>
-                    <a href="{{ route('dashboard.properties.index') }}" class="text-green-600 hover:text-green-700">Properties</a>
+                    @if (Auth::user()->can('manageProperties'))
+                        <a href="{{ route('dashboard.properties.index') }}" class="text-green-600 hover:text-green-700">Properties</a>
+                    @else
+                        <a href="#" class="text-gray-400 cursor-not-allowed" title="You don't have permission to manage properties">Properties</a>
+                    @endif
                     <a href="{{ route('dashboard.teams.index') }}" class="text-green-600 hover:text-green-700">Teams</a>
                     <form method="POST" action="{{ route('logout.get') }}" class="inline">
                         @csrf

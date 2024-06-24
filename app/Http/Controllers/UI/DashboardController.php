@@ -6,7 +6,6 @@ use App\Http\Controllers\Controller;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
-use Illuminate\Support\Facades\DB;
 use Illuminate\View\View;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Spatie\Permission\Models\Role;
@@ -20,13 +19,15 @@ class DashboardController extends Controller
             return redirect()->route('dashboard')->with('error', 'You do not have access to the dashboard.');
         }
 
-        $data = Cache::remember('dashboard', 60, function () {
+        $data = Cache::remember('dashboard', 60, function ()  use ($request) {
             $users = User::with(['roles.permissions', 'permissions'])->get();
             $roles = Role::all()->pluck('name');
             $rolesWithAssociatedPermissions = Role::with('permissions')->get();
             $permissions = Permission::all()->pluck('name');
+            $isAdmin = $request->user()->isAdmin();
 
-            return compact('users', 'roles', 'rolesWithAssociatedPermissions', 'permissions');
+
+            return compact('isAdmin', 'users', 'roles', 'rolesWithAssociatedPermissions', 'permissions');
         });
 
         return view('dashboard.index', $data);
@@ -74,14 +75,7 @@ class DashboardController extends Controller
             $validatedData = $request->validate(['name' => 'required|string|exists:roles,name']);
             $role = Role::where('name', $validatedData['name'])->first();
             if ($role) {
-                $roleId = $role->id;
-                DB::statement('SET FOREIGN_KEY_CHECKS=0;');
-                DB::transaction(function () use ($roleId) {
-                    DB::table('role_has_permissions')->where('role_id', $roleId)->delete();
-                    DB::table('model_has_roles')->where('role_id', $roleId)->delete();
-                    DB::table('roles')->where('id', $roleId)->delete();
-                });
-                DB::statement('SET FOREIGN_KEY_CHECKS=1;');
+                $role->delete();
                 Cache::forget('dashboard');
                 return redirect()->route('dashboard')->with('success', 'Role deleted successfully.');
             }
@@ -145,14 +139,7 @@ class DashboardController extends Controller
             $validatedData = $request->validate(['name' => 'required|string|exists:permissions,name']);
             $permission = Permission::where('name', $validatedData['name'])->first();
             if ($permission) {
-                $permissionId = $permission->id;
-                DB::statement('SET FOREIGN_KEY_CHECKS=0;');
-                DB::transaction(function () use ($permissionId) {
-                    DB::table('role_has_permissions')->where('permission_id', $permissionId)->delete();
-                    DB::table('model_has_permissions')->where('permission_id', $permissionId)->delete();
-                    DB::table('permissions')->where('id', $permissionId)->delete();
-                });
-                DB::statement('SET FOREIGN_KEY_CHECKS=1;');
+                $permission->delete();
                 Cache::forget('dashboard');
                 return redirect()->route('dashboard')->with('success', 'Permission deleted successfully.');
             }
