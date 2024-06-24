@@ -22,8 +22,10 @@ class CreateAdminUser extends Command
         $adminRole = Role::findOrCreate('admin', 'web');
 
         $dashboardPermission = Permission::findOrCreate('dashboard', 'web');
+        $managePropertiesPermission = Permission::findOrCreate('manageProperties', 'web');
 
         $adminRole->givePermissionTo($dashboardPermission);
+        $adminRole->givePermissionTo($managePropertiesPermission);
 
         $user = User::where('email', $email)->first();
 
@@ -38,8 +40,8 @@ class CreateAdminUser extends Command
 
             $user->assignRole($adminRole);
             $user->givePermissionTo($dashboardPermission);
+            $user->givePermissionTo($managePropertiesPermission);
             $this->info("Admin user {$email} created successfully.");
-            $this->info("Email verified at timestamp during creation: " . $emailVerifiedAt);
         } else {
             $this->info("User with email {$email} already exists.");
             $user->email_verified_at = now();
