@@ -17,6 +17,9 @@ Route::get('/register', function () {
 
 Route::middleware(['auth'])->group(function () {
     Route::get('/dashboard', [DashboardController::class, 'dashboard'])->name('dashboard');
+
+    Route::get('/dashboard/roles-and-permissions', [DashboardController::class, 'rolesAndPermissions'])->name('dashboard.roles-permissions');
+
     Route::post('/roles', [DashboardController::class, 'createRole'])->name('dashboard.create-role');
     Route::put('/roles', [DashboardController::class, 'updateRole'])->name('dashboard.update-role');
     Route::delete('/roles/delete', [DashboardController::class, 'deleteRole'])->name('dashboard.delete-role');

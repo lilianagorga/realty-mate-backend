@@ -33,13 +33,29 @@ class DashboardController extends Controller
         return view('dashboard.index', $data);
     }
 
+    public function rolesAndPermissions(Request $request): RedirectResponse | View
+    {
+        if (!$request->user()->isAdmin()) {
+            return redirect()->route('dashboard')->with('error', 'You do not have access to this section.');
+        }
+
+        $data = Cache::remember('roles-permissions', 60, function () {
+            $roles = Role::with('permissions')->get();
+            $permissions = Permission::all();
+
+            return compact('roles', 'permissions');
+        });
+
+        return view('dashboard.roles-permissions', $data);
+    }
+
     public function createRole(Request $request): RedirectResponse
     {
         if ($request->user()->isAdmin()) {
             $validatedData = $request->validate(['name' => 'required|string']);
             $role = Role::create(['name' => $validatedData['name'], 'guard_name' => 'web']);
             Cache::forget('dashboard');
-            return redirect()->route('dashboard')->with('success', 'Role created successfully.');
+            return redirect()->route('dashboard.roles-permissions')->with('success', 'Role created successfully.');
         }
         return redirect()->route('dashboard')->with('error', 'Access Forbidden');
     }
@@ -62,9 +78,9 @@ class DashboardController extends Controller
                 }
 
                 Cache::forget('dashboard');
-                return redirect()->route('dashboard')->with('success', 'Role permissions updated successfully.');
+                return redirect()->route('dashboard.roles-permissions')->with('success', 'Role permissions updated successfully.');
             }
-            return redirect()->route('dashboard')->with('error', 'Role not found or no permissions provided');
+            return redirect()->route('dashboard.roles-permissions')->with('error', 'Role not found or no permissions provided');
         }
         return redirect()->route('dashboard')->with('error', 'Access Forbidden');
     }
@@ -77,9 +93,9 @@ class DashboardController extends Controller
             if ($role) {
                 $role->delete();
                 Cache::forget('dashboard');
-                return redirect()->route('dashboard')->with('success', 'Role deleted successfully.');
+                return redirect()->route('dashboard.roles-permissions')->with('success', 'Role deleted successfully.');
             }
-            return redirect()->route('dashboard')->with('error', 'Role not found');
+            return redirect()->route('dashboard.roles-permissions')->with('error', 'Role not found');
         }
         return redirect()->route('dashboard')->with('error', 'Access Forbidden');
     }
@@ -96,9 +112,9 @@ class DashboardController extends Controller
             if ($user && $role) {
                 $user->assignRole($role);
                 Cache::forget('dashboard');
-                return redirect()->route('dashboard')->with('success', 'Role assigned to user successfully.');
+                return redirect()->route('dashboard.roles-permissions')->with('success', 'Role assigned to user successfully.');
             }
-            return redirect()->route('dashboard')->with('error', 'User or Role not found');
+            return redirect()->route('dashboard.roles-permissions')->with('error', 'User or Role not found');
         }
         return redirect()->route('dashboard')->with('error', 'Access Forbidden');
     }
@@ -115,9 +131,9 @@ class DashboardController extends Controller
             if ($user && $role) {
                 $user->removeRole($role);
                 Cache::forget('dashboard');
-                return redirect()->route('dashboard')->with('success', 'Role revoked from user successfully.');
+                return redirect()->route('dashboard.roles-permissions')->with('success', 'Role revoked from user successfully.');
             }
-            return redirect()->route('dashboard')->with('error', 'User or Role not found');
+            return redirect()->route('dashboard.roles-permissions')->with('error', 'User or Role not found');
         }
         return redirect()->route('dashboard')->with('error', 'Access Forbidden');
     }
@@ -128,7 +144,7 @@ class DashboardController extends Controller
             $validatedData = $request->validate(['name' => 'required|string']);
             $permission = Permission::create(['name' => $validatedData['name'], 'guard_name' => 'web']);
             Cache::forget('dashboard');
-            return redirect()->route('dashboard')->with('success', 'Permission created successfully.');
+            return redirect()->route('dashboard.roles-permissions')->with('success', 'Permission created successfully.');
         }
         return redirect()->route('dashboard')->with('error', 'Access Forbidden');
     }
@@ -141,9 +157,9 @@ class DashboardController extends Controller
             if ($permission) {
                 $permission->delete();
                 Cache::forget('dashboard');
-                return redirect()->route('dashboard')->with('success', 'Permission deleted successfully.');
+                return redirect()->route('dashboard.roles-permissions')->with('success', 'Permission deleted successfully.');
             }
-            return redirect()->route('dashboard')->with('error', 'Permission not found');
+            return redirect()->route('dashboard.roles-permissions')->with('error', 'Permission not found');
         }
         return redirect()->route('dashboard')->with('error', 'Access Forbidden');
     }
@@ -160,9 +176,9 @@ class DashboardController extends Controller
             if ($user && $permission) {
                 $user->givePermissionTo($permission);
                 Cache::forget('dashboard');
-                return redirect()->route('dashboard')->with('success', 'Permission assigned to user successfully.');
+                return redirect()->route('dashboard.roles-permissions')->with('success', 'Permission assigned to user successfully.');
             }
-            return redirect()->route('dashboard')->with('error', 'User or Permission not found');
+            return redirect()->route('dashboard.roles-permissions')->with('error', 'User or Permission not found');
         }
         return redirect()->route('dashboard')->with('error', 'Access Forbidden');
     }
@@ -179,9 +195,9 @@ class DashboardController extends Controller
                 $permission = Permission::findByName($validatedData['name']);
                 $user->revokePermissionTo($permission);
                 Cache::forget('dashboard');
-                return redirect()->route('dashboard')->with('success', 'Permission revoked from user successfully.');
+                return redirect()->route('dashboard.roles-permissions')->with('success', 'Permission revoked from user successfully.');
             }
-            return redirect()->route('dashboard')->with('error', 'User or Permission not found');
+            return redirect()->route('dashboard.roles-permissions')->with('error', 'User or Permission not found');
         }
         return redirect()->route('dashboard')->with('error', 'Access Forbidden');
     }
