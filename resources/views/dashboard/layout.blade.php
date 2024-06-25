@@ -12,6 +12,13 @@
                         <a href="#" class="text-gray-400 cursor-not-allowed" title="You don't have permission to manage properties">Properties</a>
                     @endif
                     <a href="{{ route('dashboard.teams.index') }}" class="text-green-600 hover:text-green-700">Teams</a>
+
+                    @if (Auth::user()->isAdmin())
+                        <a href="{{ route('dashboard.roles-permissions') }}" class="text-green-600 hover:text-green-700">Roles & Permissions</a>
+                        @else
+                            <a href="#" class="text-gray-400 cursor-not-allowed" title="You don't have permission to manage roles and Permissions">Roles & Permissions</a>
+                    @endif
+
                     <form method="POST" action="{{ route('logout.get') }}" class="inline">
                         @csrf
                         <button type="submit" class="flex items-center text-red-600 hover:text-red-700">
