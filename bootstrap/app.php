@@ -4,7 +4,8 @@ use App\Console\Commands\CreateTeam;
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
-use App\Console\Commands\CreateAdminUser;
+use App\Console\Commands\CreateAdmin;
+use App\Console\Commands\CreatePricesCommand;
 
 return Application::configure(basePath: dirname(__DIR__))
     ->withRouting(
@@ -31,6 +32,7 @@ return Application::configure(basePath: dirname(__DIR__))
     ->withExceptions(function (Exceptions $exceptions) {
         //
     })->withCommands([
-        CreateAdminUser::class,
+        CreateAdmin::class,
         CreateTeam::class,
+        CreatePricesCommand::class,
     ])->create();

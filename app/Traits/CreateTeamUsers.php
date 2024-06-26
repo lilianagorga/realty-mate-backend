@@ -5,20 +5,17 @@ namespace App\Traits;
 use App\Models\User;
 use App\Models\Team;
 use Illuminate\Support\Facades\Hash;
-use Spatie\Permission\Models\Permission;
 use Spatie\Permission\Models\Role;
 
 trait CreateTeamUsers
 {
-    public function CreateTeamUsers(): void
+    use ManageRolesAndPermissions;
+
+    public function createTeamUsers(): void
     {
+        $this->setupRolesAndPermissions();
+
         $teamRole = Role::findOrCreate('team', 'web');
-
-        $dashboardPermission = Permission::findOrCreate('dashboard', 'web');
-        $managePropertiesPermission = Permission::findOrCreate('manageProperties', 'web');
-
-        $teamRole->givePermissionTo($dashboardPermission);
-        $teamRole->givePermissionTo($managePropertiesPermission);
 
         $teams = config('team_data');
 
@@ -37,8 +34,13 @@ trait CreateTeamUsers
             );
 
             $teamUser->assignRole($teamRole);
-            $teamUser->givePermissionTo($dashboardPermission);
-            $teamUser->givePermissionTo($managePropertiesPermission);
+            $this->assignPermissionsToTeam($teamUser);
         }
+    }
+
+    protected function assignPermissionsToTeam($teamUser): void
+    {
+        $teamUser->givePermissionTo('dashboard');
+        $teamUser->givePermissionTo('manageProperties');
     }
 }
