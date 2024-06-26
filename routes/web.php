@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\PriceController;
 use App\Http\Controllers\PropertyController;
 use App\Http\Controllers\TeamController;
 use App\Http\Controllers\UI\AuthWebController;
@@ -46,6 +47,14 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/dashboard/teams/{id}/edit', [TeamController::class, 'edit'])->name('dashboard.teams.edit');
     Route::put('/dashboard/teams/{id}', [TeamController::class, 'update'])->name('dashboard.teams.update');
     Route::delete('/dashboard/teams/{id}', [TeamController::class, 'destroy'])->name('dashboard.teams.destroy');
+
+    Route::get('/dashboard/prices', [PriceController::class, 'index'])->name('dashboard.prices.index');
+    Route::post('/dashboard/prices', [PriceController::class, 'store'])->name('dashboard.prices.store');
+    Route::get('/dashboard/prices/create', [PriceController::class, 'create'])->name('dashboard.prices.create');
+    Route::get('/dashboard/prices/{id}', [PriceController::class, 'show'])->name('dashboard.prices.show');
+    Route::get('/dashboard/prices/{id}/edit', [PriceController::class, 'edit'])->name('dashboard.prices.edit');
+    Route::put('/dashboard/prices/{id}', [PriceController::class, 'update'])->name('dashboard.prices.update');
+    Route::delete('/dashboard/prices/{id}', [PriceController::class, 'destroy'])->name('dashboard.prices.destroy');
 });
 
 Route::get('/', function () {

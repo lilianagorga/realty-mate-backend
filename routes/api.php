@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\PriceController;
 use App\Http\Controllers\UserController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -24,6 +25,12 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/teams/{id}', [TeamController::class, 'show']);
     Route::put('/teams/{id}', [TeamController::class, 'update']);
     Route::delete('/teams/{id}', [TeamController::class, 'destroy']);
+
+    Route::get('/prices', [PriceController::class, 'index']);
+    Route::post('/prices', [PriceController::class, 'store']);
+    Route::get('/prices/{id}', [PriceController::class, 'show']);
+    Route::put('/prices/{id}', [PriceController::class, 'update']);
+    Route::delete('/prices/{id}', [PriceController::class, 'destroy']);
 
     Route::apiResource('users', UserController::class)->except('store');
 

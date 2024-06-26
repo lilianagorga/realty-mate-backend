@@ -84,4 +84,9 @@ class User extends Authenticatable
     {
         return $this->isAdmin() || $this->hasPermissionTo('teamManagement', 'web');
     }
+
+    public function canManagePrice(): bool
+    {
+        return $this->isAdmin() || $this->hasPermissionTo('priceManagement', 'web');
+    }
 }
