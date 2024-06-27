@@ -3,6 +3,7 @@
 use App\Http\Controllers\PriceController;
 use App\Http\Controllers\PropertyController;
 use App\Http\Controllers\TeamController;
+use App\Http\Controllers\TestimonialController;
 use App\Http\Controllers\UI\AuthWebController;
 use App\Http\Controllers\UI\DashboardController;
 use Illuminate\Support\Facades\Auth;
@@ -55,6 +56,14 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/dashboard/prices/{id}/edit', [PriceController::class, 'edit'])->name('dashboard.prices.edit');
     Route::put('/dashboard/prices/{id}', [PriceController::class, 'update'])->name('dashboard.prices.update');
     Route::delete('/dashboard/prices/{id}', [PriceController::class, 'destroy'])->name('dashboard.prices.destroy');
+
+    Route::get('/dashboard/testimonials', [TestimonialController::class, 'index'])->name('dashboard.testimonials.index');
+    Route::post('/dashboard/testimonials', [TestimonialController::class, 'store'])->name('dashboard.testimonials.store');
+    Route::get('/dashboard/testimonials/create', [TestimonialController::class, 'create'])->name('dashboard.testimonials.create');
+    Route::get('/dashboard/testimonials/{id}', [TestimonialController::class, 'show'])->name('dashboard.testimonials.show');
+    Route::get('/dashboard/testimonials/{id}/edit', [TestimonialController::class, 'edit'])->name('dashboard.testimonials.edit');
+    Route::put('/dashboard/testimonials/{id}', [TestimonialController::class, 'update'])->name('dashboard.testimonials.update');
+    Route::delete('/dashboard/testimonials/{id}', [TestimonialController::class, 'destroy'])->name('dashboard.testimonials.destroy');
 });
 
 Route::get('/', function () {

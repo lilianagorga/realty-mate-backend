@@ -1,6 +1,7 @@
 <?php
 
 use App\Console\Commands\CreateTeam;
+use App\Console\Commands\CreateTestimonials;
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
@@ -35,4 +36,5 @@ return Application::configure(basePath: dirname(__DIR__))
         CreateAdmin::class,
         CreateTeam::class,
         CreatePricesCommand::class,
+        CreateTestimonials::class,
     ])->create();
