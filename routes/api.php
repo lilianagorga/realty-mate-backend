@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\PartnerController;
 use App\Http\Controllers\PriceController;
 use App\Http\Controllers\TestimonialController;
 use App\Http\Controllers\UserController;
@@ -36,12 +37,18 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::put('/testimonials/{id}', [TestimonialController::class, 'update']);
     Route::delete('/testimonials/{id}', [TestimonialController::class, 'destroy']);
 
+    Route::post('/partners', [PartnerController::class, 'store']);
+    Route::get('/partners/{id}', [PartnerController::class, 'show']);
+    Route::put('/partners/{id}', [PartnerController::class, 'update']);
+    Route::delete('/partners/{id}', [PartnerController::class, 'destroy']);
+
     Route::apiResource('users', UserController::class)->except('store');
 
     Route::post('/logout', [AuthController::class, 'logout']);
     Route::get('/me', [AuthController::class, 'me']);
 });
 
+Route::get('/partners', [PartnerController::class, 'index']);
 Route::get('/prices', [PriceController::class, 'index']);
 Route::get('/teams', [TeamController::class, 'index']);
 Route::get('/testimonials', [TestimonialController::class, 'index']);

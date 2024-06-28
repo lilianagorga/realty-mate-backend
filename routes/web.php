@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\PartnerController;
 use App\Http\Controllers\PriceController;
 use App\Http\Controllers\PropertyController;
 use App\Http\Controllers\TeamController;
@@ -64,6 +65,14 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/dashboard/testimonials/{id}/edit', [TestimonialController::class, 'edit'])->name('dashboard.testimonials.edit');
     Route::put('/dashboard/testimonials/{id}', [TestimonialController::class, 'update'])->name('dashboard.testimonials.update');
     Route::delete('/dashboard/testimonials/{id}', [TestimonialController::class, 'destroy'])->name('dashboard.testimonials.destroy');
+
+    Route::get('/dashboard/partners', [PartnerController::class, 'index'])->name('dashboard.partners.index');
+    Route::post('/dashboard/partners', [PartnerController::class, 'store'])->name('dashboard.partners.store');
+    Route::get('/dashboard/partners/create', [PartnerController::class, 'create'])->name('dashboard.partners.create');
+    Route::get('/dashboard/partners/{id}', [PartnerController::class, 'show'])->name('dashboard.partners.show');
+    Route::get('/dashboard/partners/{id}/edit', [PartnerController::class, 'edit'])->name('dashboard.partners.edit');
+    Route::put('/dashboard/partners/{id}', [PartnerController::class, 'update'])->name('dashboard.partners.update');
+    Route::delete('/dashboard/partners/{id}', [PartnerController::class, 'destroy'])->name('dashboard.partners.destroy');
 });
 
 Route::get('/', function () {
