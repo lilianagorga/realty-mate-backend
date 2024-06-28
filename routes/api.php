@@ -9,6 +9,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\TeamController;
 use App\Http\Controllers\PropertyController;
+use App\Http\Controllers\PdfGuideController;
 
 Route::middleware('auth:sanctum')->group(function () {
 
@@ -46,6 +47,7 @@ Route::middleware('auth:sanctum')->group(function () {
 
     Route::post('/logout', [AuthController::class, 'logout']);
     Route::get('/me', [AuthController::class, 'me']);
+    Route::post('/send-guide', [PdfGuideController::class, 'sendGuide']);
 });
 
 Route::get('/partners', [PartnerController::class, 'index']);
