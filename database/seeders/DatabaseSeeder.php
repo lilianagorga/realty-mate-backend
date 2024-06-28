@@ -3,6 +3,7 @@
 namespace Database\Seeders;
 
 use App\Traits\CreateAdminUser;
+use App\Traits\CreatePartners;
 use App\Traits\CreatePrices;
 use App\Traits\CreateTeamUsers;
 use App\Traits\CreateTestimonialUsers;
@@ -10,7 +11,7 @@ use Illuminate\Database\Seeder;
 
 class DatabaseSeeder extends Seeder
 {
-    use CreateAdminUser, CreateTeamUsers, CreatePrices, CreateTestimonialUsers;
+    use CreateAdminUser, CreateTeamUsers, CreatePrices, CreateTestimonialUsers, CreatePartners;
 
     public function run(): void
     {
@@ -18,5 +19,6 @@ class DatabaseSeeder extends Seeder
         $this->createTeamUsers();
         $this->createPrices();
         $this->createTestimonialUsers();
+        $this->createPartners();
     }
 }

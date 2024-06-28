@@ -7,6 +7,7 @@ use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
 use App\Console\Commands\CreateAdmin;
 use App\Console\Commands\CreatePricesCommand;
+use App\Console\Commands\CreatePartnersCommand;
 
 return Application::configure(basePath: dirname(__DIR__))
     ->withRouting(
@@ -37,4 +38,5 @@ return Application::configure(basePath: dirname(__DIR__))
         CreateTeam::class,
         CreatePricesCommand::class,
         CreateTestimonials::class,
+        CreatePartnersCommand::class,
     ])->create();

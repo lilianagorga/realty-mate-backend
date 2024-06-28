@@ -26,6 +26,7 @@
                     @endif
 
                     <a href="{{ route('dashboard.testimonials.index') }}" class="text-green-600 hover:text-green-700">Testimonials</a>
+                    <a href="{{ route('dashboard.partners.index') }}" class="text-green-600 hover:text-green-700">Partners</a>
 
                     <form method="POST" action="{{ route('logout.get') }}" class="inline">
                         @csrf

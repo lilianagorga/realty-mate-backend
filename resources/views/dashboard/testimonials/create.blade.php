@@ -23,7 +23,7 @@
             </div>
             <div class="form-group mb-4">
                 <label for="testimonial" class="block text-sm font-medium text-beige-600">Testimonial</label>
-                <textarea name="testimonial" id="testimonial" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring focus:ring-opacity-50 bg-beige-200 text-green-700 text-center" required></textarea>
+                <textarea name="testimonial" id="testimonial" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring focus:ring-opacity-50 bg-beige-200 text-green-700 text-center p-2 pt-8" required></textarea>
             </div>
             <div class="flex justify-center space-x-4">
                 <button type="submit" class="mt-6 bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600">Create</button>
