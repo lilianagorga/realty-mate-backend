@@ -1,6 +1,8 @@
 <?php
 
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\ContactController;
+use App\Http\Controllers\FooterController;
 use App\Http\Controllers\PartnerController;
 use App\Http\Controllers\PriceController;
 use App\Http\Controllers\TestimonialController;
@@ -48,6 +50,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/logout', [AuthController::class, 'logout']);
     Route::get('/me', [AuthController::class, 'me']);
     Route::post('/send-guide', [PdfGuideController::class, 'sendGuide']);
+    Route::post('/contact', [ContactController::class, 'sendContactEmail']);
 });
 
 Route::get('/partners', [PartnerController::class, 'index']);
@@ -57,3 +60,5 @@ Route::get('/testimonials', [TestimonialController::class, 'index']);
 
 Route::post('/user/register', [AuthController::class, 'register']);
 Route::post('/user/login', [AuthController::class, 'login']);
+
+Route::get('/footer-links', [FooterController::class, 'index']);
