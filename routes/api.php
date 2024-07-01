@@ -19,31 +19,13 @@ Route::middleware('auth:sanctum')->group(function () {
         return $request->user();
     });
 
-    Route::get('/properties', [PropertyController::class, 'index']);
-    Route::post('/properties', [PropertyController::class, 'store']);
-    Route::get('/properties/{id}', [PropertyController::class, 'show']);
-    Route::put('/properties/{id}', [PropertyController::class, 'update']);
-    Route::delete('/properties/{id}', [PropertyController::class, 'destroy']);
+    Route::apiResource('properties', PropertyController::class)->except('edit');
+    Route::apiResource('teams', TeamController::class)->except(['create', 'edit', 'index']);
+    Route::apiResource('prices', PriceController::class)->except(['create', 'edit', 'index']);
 
-    Route::post('/teams', [TeamController::class, 'store']);
-    Route::get('/teams/{id}', [TeamController::class, 'show']);
-    Route::put('/teams/{id}', [TeamController::class, 'update']);
-    Route::delete('/teams/{id}', [TeamController::class, 'destroy']);
 
-    Route::post('/prices', [PriceController::class, 'store']);
-    Route::get('/prices/{id}', [PriceController::class, 'show']);
-    Route::put('/prices/{id}', [PriceController::class, 'update']);
-    Route::delete('/prices/{id}', [PriceController::class, 'destroy']);
-
-    Route::post('/testimonials', [TestimonialController::class, 'store']);
-    Route::get('/testimonials/{id}', [TestimonialController::class, 'show']);
-    Route::put('/testimonials/{id}', [TestimonialController::class, 'update']);
-    Route::delete('/testimonials/{id}', [TestimonialController::class, 'destroy']);
-
-    Route::post('/partners', [PartnerController::class, 'store']);
-    Route::get('/partners/{id}', [PartnerController::class, 'show']);
-    Route::put('/partners/{id}', [PartnerController::class, 'update']);
-    Route::delete('/partners/{id}', [PartnerController::class, 'destroy']);
+    Route::apiResource('testimonials', TestimonialController::class)->except(['create', 'edit', 'index']);
+    Route::apiResource('partners', PartnerController::class)->except(['create', 'edit', 'index']);
 
     Route::apiResource('users', UserController::class)->except('store');
 

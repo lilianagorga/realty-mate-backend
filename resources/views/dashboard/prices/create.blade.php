@@ -25,6 +25,10 @@
                 <label for="ptext" class="block text-sm font-medium text-beige-600">Ptext</label>
                 <input type="text" name="ptext" id="ptext" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring focus:ring-opacity-50 bg-beige-200 text-green-700 text-center" required>
             </div>
+            <div class="form-group mb-4">
+                <label for="best" class="block text-sm font-medium text-beige-600">Best (optional)</label>
+                <input type="text" name="best" id="best" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring focus:ring-opacity-50 bg-beige-200 text-green-700 text-center">
+            </div>
             <div class="flex justify-center space-x-4">
                 <button type="submit" class="mt-6 bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600">Create</button>
                 <a href="{{ route('dashboard.prices.index') }}" class="mt-6 bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600">Back</a>

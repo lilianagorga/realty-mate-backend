@@ -27,9 +27,10 @@ class PriceController extends Controller
             'plan' => 'required|string|max:255',
             'price' => 'required|numeric',
             'ptext' => 'required|string',
+            'best' => 'nullable|string|max:255',
         ]);
 
-        $price = Price::create($request->only(['plan', 'price', 'ptext']));
+        $price = Price::create($request->only(['plan', 'price', 'ptext', 'best']));
 
         $defaultFeatures = [
             ['icon' => json_encode('<i class="fa-solid fa-check"></i>'), 'text' => 'Default Feature 1'],
@@ -77,10 +78,11 @@ class PriceController extends Controller
             'plan' => 'sometimes|string|max:255',
             'price' => 'sometimes|numeric',
             'ptext' => 'sometimes|string',
+            'best' => 'nullable|string|max:255',
         ]);
 
         $price = Price::findOrFail($id);
-        $price->update($request->only(['plan', 'price', 'ptext']));
+        $price->update($request->only(['plan', 'price', 'ptext', 'best']));
 
         if ($request->wantsJson()) {
             return response()->json($price->load('features'));

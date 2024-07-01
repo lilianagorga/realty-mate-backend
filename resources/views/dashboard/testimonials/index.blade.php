@@ -29,7 +29,7 @@
                     <td class="py-2 px-4 text-beige-600">{{ Str::limit($testimonial->testimonial, 50) }}</td>
                     <td class="py-2 px-4">
                         <a href="{{ route('dashboard.testimonials.edit', $testimonial->id) }}" class="text-green-600 hover:text-green-700">Edit</a>
-                        <span class="text-beige-600 mx-2">|</span>
+                        <span class="text-beige-600 mx-2 hidden lg:inline">|</span>
                         <form action="{{ route('dashboard.testimonials.destroy', $testimonial->id) }}" method="POST" class="inline">
                             @csrf
                             @method('DELETE')
