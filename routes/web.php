@@ -35,44 +35,54 @@ Route::middleware(['auth'])->group(function () {
 
     Route::post('/logout', [AuthWebController::class, 'logout'])->name('logout');
 
-    Route::get('/dashboard/properties', [PropertyController::class, 'index'])->name('dashboard.properties.index');
-    Route::post('/dashboard/properties', [PropertyController::class, 'store'])->name('dashboard.properties.store');
-    Route::get('/dashboard/properties/{id}', [PropertyController::class, 'show'])->name('dashboard.properties.show');
-    Route::get('/dashboard/properties/{id}/edit', [PropertyController::class, 'edit'])->name('dashboard.properties.edit');
-    Route::put('/dashboard/properties/{id}', [PropertyController::class, 'update'])->name('dashboard.properties.update');
-    Route::delete('/dashboard/properties/{id}', [PropertyController::class, 'destroy'])->name('dashboard.properties.destroy');
+    Route::resource('/dashboard/properties', PropertyController::class)->names([
+        'index' => 'dashboard.properties.index',
+        'store' => 'dashboard.properties.store',
+        'show' => 'dashboard.properties.show',
+        'edit' => 'dashboard.properties.edit',
+        'update' => 'dashboard.properties.update',
+        'destroy' => 'dashboard.properties.destroy'
+    ])->except('create');
 
-    Route::get('/dashboard/teams', [TeamController::class, 'index'])->name('dashboard.teams.index');
-    Route::post('/dashboard/teams', [TeamController::class, 'store'])->name('dashboard.teams.store');
-    Route::get('/dashboard/teams/create', [TeamController::class, 'create'])->name('dashboard.teams.create');
-    Route::get('/dashboard/teams/{id}', [TeamController::class, 'show'])->name('dashboard.teams.show');
-    Route::get('/dashboard/teams/{id}/edit', [TeamController::class, 'edit'])->name('dashboard.teams.edit');
-    Route::put('/dashboard/teams/{id}', [TeamController::class, 'update'])->name('dashboard.teams.update');
-    Route::delete('/dashboard/teams/{id}', [TeamController::class, 'destroy'])->name('dashboard.teams.destroy');
+    Route::resource('/dashboard/teams', TeamController::class)->names([
+        'index' => 'dashboard.teams.index',
+        'store' => 'dashboard.teams.store',
+        'create' => 'dashboard.teams.create',
+        'show' => 'dashboard.teams.show',
+        'edit' => 'dashboard.teams.edit',
+        'update' => 'dashboard.teams.update',
+        'destroy' => 'dashboard.teams.destroy'
+    ]);
 
-    Route::get('/dashboard/prices', [PriceController::class, 'index'])->name('dashboard.prices.index');
-    Route::post('/dashboard/prices', [PriceController::class, 'store'])->name('dashboard.prices.store');
-    Route::get('/dashboard/prices/create', [PriceController::class, 'create'])->name('dashboard.prices.create');
-    Route::get('/dashboard/prices/{id}', [PriceController::class, 'show'])->name('dashboard.prices.show');
-    Route::get('/dashboard/prices/{id}/edit', [PriceController::class, 'edit'])->name('dashboard.prices.edit');
-    Route::put('/dashboard/prices/{id}', [PriceController::class, 'update'])->name('dashboard.prices.update');
-    Route::delete('/dashboard/prices/{id}', [PriceController::class, 'destroy'])->name('dashboard.prices.destroy');
+    Route::resource('/dashboard/prices', PriceController::class)->names([
+        'index' => 'dashboard.prices.index',
+        'store' => 'dashboard.prices.store',
+        'create' => 'dashboard.prices.create',
+        'show' => 'dashboard.prices.show',
+        'edit' => 'dashboard.prices.edit',
+        'update' => 'dashboard.prices.update',
+        'destroy' => 'dashboard.prices.destroy'
+    ]);
 
-    Route::get('/dashboard/testimonials', [TestimonialController::class, 'index'])->name('dashboard.testimonials.index');
-    Route::post('/dashboard/testimonials', [TestimonialController::class, 'store'])->name('dashboard.testimonials.store');
-    Route::get('/dashboard/testimonials/create', [TestimonialController::class, 'create'])->name('dashboard.testimonials.create');
-    Route::get('/dashboard/testimonials/{id}', [TestimonialController::class, 'show'])->name('dashboard.testimonials.show');
-    Route::get('/dashboard/testimonials/{id}/edit', [TestimonialController::class, 'edit'])->name('dashboard.testimonials.edit');
-    Route::put('/dashboard/testimonials/{id}', [TestimonialController::class, 'update'])->name('dashboard.testimonials.update');
-    Route::delete('/dashboard/testimonials/{id}', [TestimonialController::class, 'destroy'])->name('dashboard.testimonials.destroy');
+    Route::resource('/dashboard/testimonials', TestimonialController::class)->names([
+        'index' => 'dashboard.testimonials.index',
+        'store' => 'dashboard.testimonials.store',
+        'create' => 'dashboard.testimonials.create',
+        'show' => 'dashboard.testimonials.show',
+        'edit' => 'dashboard.testimonials.edit',
+        'update' => 'dashboard.testimonials.update',
+        'destroy' => 'dashboard.testimonials.destroy'
+    ]);
 
-    Route::get('/dashboard/partners', [PartnerController::class, 'index'])->name('dashboard.partners.index');
-    Route::post('/dashboard/partners', [PartnerController::class, 'store'])->name('dashboard.partners.store');
-    Route::get('/dashboard/partners/create', [PartnerController::class, 'create'])->name('dashboard.partners.create');
-    Route::get('/dashboard/partners/{id}', [PartnerController::class, 'show'])->name('dashboard.partners.show');
-    Route::get('/dashboard/partners/{id}/edit', [PartnerController::class, 'edit'])->name('dashboard.partners.edit');
-    Route::put('/dashboard/partners/{id}', [PartnerController::class, 'update'])->name('dashboard.partners.update');
-    Route::delete('/dashboard/partners/{id}', [PartnerController::class, 'destroy'])->name('dashboard.partners.destroy');
+    Route::resource('/dashboard/partners', PartnerController::class)->names([
+        'index' => 'dashboard.partners.index',
+        'store' => 'dashboard.partners.store',
+        'create' => 'dashboard.partners.create',
+        'show' => 'dashboard.partners.show',
+        'edit' => 'dashboard.partners.edit',
+        'update' => 'dashboard.partners.update',
+        'destroy' => 'dashboard.partners.destroy'
+    ]);
 });
 
 Route::get('/', function () {

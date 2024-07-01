@@ -54,9 +54,9 @@
                         <td class="py-2">
                             <a href="{{ route('dashboard.properties.show', $property->id) }}" class="text-green-600">View</a>
                             @if (Auth::user()->can('manageProperties'))
-                                <span class="text-beige-600 mx-2">|</span>
+                                <span class="text-beige-600 mx-2 hidden lg:inline">|</span>
                                 <a href="{{ route('dashboard.properties.edit', $property->id) }}" class="text-green-600">Edit</a>
-                                <span class="text-beige-600 mx-2">|</span>
+                                <span class="text-beige-600 mx-2 hidden lg:inline">|</span>
                                 <form action="{{ route('dashboard.properties.destroy', $property->id) }}" method="POST" class="inline">
                                     @csrf
                                     @method('DELETE')

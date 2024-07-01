@@ -34,7 +34,7 @@
                     <td class="py-2 px-4">
                         @if (Auth::user()->canManagePrice())
                             <a href="{{ route('dashboard.prices.edit', $price->id) }}" class="text-green-600 hover:text-green-700">Edit</a>
-                            <span class="text-beige-600 mx-2">|</span>
+                            <span class="text-beige-600 mx-2 hidden lg:inline">|</span>
                             <form action="{{ route('dashboard.prices.destroy', $price->id) }}" method="POST" class="inline">
                                 @csrf
                                 @method('DELETE')
@@ -42,7 +42,7 @@
                             </form>
                         @else
                             <a href="#" class="text-gray-400 cursor-not-allowed" title="You don't have permission to edit prices">Edit</a>
-                            <span class="text-beige-600 mx-2">|</span>
+                            <span class="text-beige-600 mx-2 hidden lg:inline">|</span>
                             <form class="inline">
                                 <button type="button" class="text-gray-400 cursor-not-allowed" title="You don't have permission to delete prices">Delete</button>
                             </form>

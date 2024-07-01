@@ -34,7 +34,7 @@
                     <td class="py-2 px-4">
                         @if (Auth::user()->canManageTeam())
                             <a href="{{ route('dashboard.teams.edit', $team->id) }}" class="text-green-600 hover:text-green-700">Edit</a>
-                            <span class="text-beige-600 mx-2">|</span>
+                            <span class="text-beige-600 mx-2 hidden lg:inline">|</span>
                             <form action="{{ route('dashboard.teams.destroy', $team->id) }}" method="POST" class="inline">
                                 @csrf
                                 @method('DELETE')
@@ -42,7 +42,7 @@
                             </form>
                         @else
                             <a href="#" class="text-gray-400 cursor-not-allowed" title="You don't have permission to edit teams">Edit</a>
-                            <span class="text-beige-600 mx-2">|</span>
+                            <span class="text-beige-600 mx-2 hidden lg:inline">|</span>
                             <form class="inline">
                                 <button type="button" class="text-gray-400 cursor-not-allowed" title="You don't have permission to delete teams">Delete</button>
                             </form>
