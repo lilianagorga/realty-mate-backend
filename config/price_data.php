@@ -6,11 +6,11 @@ return [
         'price' => 29,
         'ptext' => 'per user, per month',
         'features' => [
-            ['icon' => json_encode('<i class="fa-solid fa-check"></i>'), 'text' => '99.5% Uptime Guarantee'],
-            ['icon' => json_encode('<i class="fa-solid fa-check"></i>'), 'text' => '120GB CDN Bandwidth'],
-            ['icon' => json_encode('<i class="fa-solid fa-check"></i>'), 'text' => '5GB Cloud Storage'],
-            ['icon' => json_encode('<i class="fa-solid fa-x"></i>'), 'text' => 'Personal Help Support', 'change' => 'color'],
-            ['icon' => json_encode('<i class="fa-solid fa-x"></i>'), 'text' => 'Enterprise SLA', 'change' => 'color'],
+            ['icon' => json_encode('<i class="fa-solid fa-check"></i>'), 'text' => 'Access Basic Listings'],
+            ['icon' => json_encode('<i class="fa-solid fa-check"></i>'), 'text' => 'Publish 10 Listings'],
+            ['icon' => json_encode('<i class="fa-solid fa-check"></i>'), 'text' => 'Email Support'],
+            ['icon' => json_encode('<i class="fa-solid fa-x"></i>'), 'text' => 'Phone Support', 'change' => 'color'],
+            ['icon' => json_encode('<i class="fa-solid fa-x"></i>'), 'text' => 'Market Analysis', 'change' => 'color'],
         ]
     ],
     [
@@ -19,11 +19,11 @@ return [
         'price' => 49,
         'ptext' => 'per user, per month',
         'features' => [
-            ['icon' => json_encode('<i class="fa-solid fa-check"></i>'), 'text' => '99.5% Uptime Guarantee'],
-            ['icon' => json_encode('<i class="fa-solid fa-check"></i>'), 'text' => '150GB CDN Bandwidth'],
-            ['icon' => json_encode('<i class="fa-solid fa-check"></i>'), 'text' => '10GB Cloud Storage'],
-            ['icon' => json_encode('<i class="fa-solid fa-check"></i>'), 'text' => 'Personal Help Support'],
-            ['icon' => json_encode('<i class="fa-solid fa-x"></i>'), 'text' => 'Enterprise SLA', 'change' => 'color'],
+            ['icon' => json_encode('<i class="fa-solid fa-check"></i>'), 'text' => 'Access All Listings'],
+            ['icon' => json_encode('<i class="fa-solid fa-check"></i>'), 'text' => 'Publish 50 Listings'],
+            ['icon' => json_encode('<i class="fa-solid fa-check"></i>'), 'text' => 'Email and Chat'],
+            ['icon' => json_encode('<i class="fa-solid fa-check"></i>'), 'text' => 'Phone Support'],
+            ['icon' => json_encode('<i class="fa-solid fa-x"></i>'), 'text' => 'Market Analysis', 'change' => 'color'],
         ]
     ],
     [
@@ -31,11 +31,11 @@ return [
         'price' => 79,
         'ptext' => '2 user, per month',
         'features' => [
-            ['icon' => json_encode('<i class="fa-solid fa-check"></i>'), 'text' => '100% Uptime Guarantee'],
-            ['icon' => json_encode('<i class="fa-solid fa-check"></i>'), 'text' => '200GB CDN Bandwidth'],
-            ['icon' => json_encode('<i class="fa-solid fa-check"></i>'), 'text' => '20GB Cloud Storage'],
-            ['icon' => json_encode('<i class="fa-solid fa-check"></i>'), 'text' => 'Personal Help Support'],
-            ['icon' => json_encode('<i class="fa-solid fa-check"></i>'), 'text' => 'Enterprise SLA'],
+            ['icon' => json_encode('<i class="fa-solid fa-check"></i>'), 'text' => 'Unlimited Listings'],
+            ['icon' => json_encode('<i class="fa-solid fa-check"></i>'), 'text' => 'Full Market Access'],
+            ['icon' => json_encode('<i class="fa-solid fa-check"></i>'), 'text' => 'Email, Chat, Phone'],
+            ['icon' => json_encode('<i class="fa-solid fa-check"></i>'), 'text' => 'Personal Phone Support'],
+            ['icon' => json_encode('<i class="fa-solid fa-check"></i>'), 'text' => 'Market Analysis'],
         ]
     ],
 ];
